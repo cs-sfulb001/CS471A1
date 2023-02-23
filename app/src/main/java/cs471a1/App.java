@@ -7,6 +7,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class App {
+    JLabel CurProcess = new JLabel("        ");
     public String getGreeting() {
         return "Hello World!";
     }
@@ -85,19 +86,67 @@ public class App {
         frame.setVisible(true);
     }
 
+    public boolean hasText(String word){
+        for(int i=0;i<word.length();i++){
+            if(word.charAt(i) != ' '){
+                return true;
+            }
+        }
+        return false;
+    }
     public void OSGUI(){
+        //Window Creation
         JFrame window = new JFrame("OSGUI");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setSize(1600,700);
+        window.setSize(1300,700);
+        //Panel Creation
         JPanel PQ = new JPanel();
         JPanel CurrentProcess = new JPanel();
         JPanel NewProcess = new JPanel();
         JPanel BlockedList = new JPanel();
-
+        //Panel Formating
+        JButton test1 = new JButton("PQ");
+        //Panel Current Process
+        JLabel Process = new JLabel("Current Process: ");
+        JButton Block = new JButton("Block");
+        JButton Finish = new JButton("Complete");
+        CurrentProcess.add(Process);
+        CurrentProcess.add(CurProcess);
+        CurrentProcess.add(Block);
+        CurrentProcess.add(Finish);
+        //Panel Blocked List
+        JLabel BlockedLabel = new JLabel("Blocked List");
+        BlockedList.add(BlockedLabel);
+        BlockedList.add(new JSeparator(JSeparator.HORIZONTAL));
+        //Panel Priority Queue
+        JLabel pQLabel = new JLabel("Priorty Queue");
+        PQ.add(pQLabel);
+        //Panel NewProcess
+        JLabel NewP = new JLabel("Process Name");
+        JLabel Newtest = new JLabel("Nothing");
+        JTextField ProcessField = new JTextField(30);
+        JButton AddProcess = new JButton("Add Process");
+        AddProcess.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                String NewProcessName = ProcessField.getText();//Grabs what is in the field
+                ProcessField.setText("");
+                if(NewProcessName.length()>0&&hasText(NewProcessName)){
+                    Newtest.setText(NewProcessName);
+                }
+            }
+        });
+        NewProcess.add(NewP);
+        NewProcess.add(ProcessField);
+        NewProcess.add(AddProcess);
+        NewProcess.add(Newtest);
+        //Window formating
         window.add(BorderLayout.NORTH, CurrentProcess);
         window.add(BorderLayout.SOUTH, NewProcess);
         window.add(BorderLayout.WEST, BlockedList);
+        window.add(new JSeparator(JSeparator.VERTICAL), BorderLayout.CENTER);
         window.add(BorderLayout.CENTER, PQ);
+        window.setVisible(true);
     }
 
     public static void main(String[] args) {
