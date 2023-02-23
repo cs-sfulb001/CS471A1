@@ -7,6 +7,11 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class App {
+    private OS LoadedOS;
+
+    public App(){
+        LoadedOS = new OS();
+    }
     JLabel CurProcess = new JLabel("        ");
     public String getGreeting() {
         return "Hello World!";
