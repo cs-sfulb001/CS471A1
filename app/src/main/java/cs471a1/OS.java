@@ -1,16 +1,19 @@
 package cs471a1;
 
 import java.util.Vector;
-import java.nio.channels.ReadPendingException;
-import java.util.PriorityQueue;
+import java.util.concurrent.PriorityBlockingQueue;
+import java.util.Queue;
 public class OS {
     private Prog current_program;
     private Vector<Prog> BlockedList;
-    private PriorityQueue<Prog> ReadyProgs;
+    private Vector<Queue<Prog>> ReadyProgs;
     public OS(){
         current_program = null;
         BlockedList=new Vector<Prog>();
-        ReadyProgs = new PriorityQueue<Prog>();
+        ReadyProgs = new Vector<Queue<Prog>>();
+        for(int i=0;i<5;i++){
+            ReadyProgs.add(new Queue<Prog>());
+        }
     }
 
     public String getCurrentProgram(){

@@ -1,4 +1,5 @@
 package cs471a1;
+
 public class Prog {
     private String prog;
     private int Priority;
@@ -20,4 +21,5 @@ public class Prog {
     public int GetProgPriority(){
         return Priority;
     }
+    Boolean operator < (prog)
 }
