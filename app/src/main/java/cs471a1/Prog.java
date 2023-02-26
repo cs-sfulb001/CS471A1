@@ -21,5 +21,4 @@ public class Prog {
     public int GetProgPriority(){
         return Priority;
     }
-    Boolean operator < (prog)
 }

@@ -4,7 +4,11 @@
 package cs471a1;
 import java.awt.*;
 import java.awt.event.*;
+
+import javax.imageio.plugins.jpeg.JPEGHuffmanTable;
+import javax.print.DocFlavor.STRING;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 public class App {
     private OS LoadedOS;
@@ -13,83 +17,6 @@ public class App {
         LoadedOS = new OS();
     }
     JLabel CurProcess = new JLabel("        ");
-    public String getGreeting() {
-        return "Hello World!";
-    }
-
-    public void example(){
-        JFrame frame = new JFrame("My First GUI");
-        JPanel buttonPane = new JPanel();
-        //frame.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1600,700);
-        JButton button = new JButton("Press");//Sets up button
-        button.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                test_code();
-            }});
-        JButton newButton = new JButton("test");
-        newButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e){
-                frame.revalidate();
-            }
-        });
-        
-        JButton button1 = new JButton("Button 1");
-        JButton button2 = new JButton("Button 2");
-        buttonPane.add(BorderLayout.NORTH, button1);
-        buttonPane.add(BorderLayout.SOUTH, button2);
-        //frame.add(button); // Adds Button to content pane ofbuttonPane
-        buttonPane.add(button);
-        buttonPane.add(Box.createHorizontalStrut(5));
-        buttonPane.add(new JSeparator(SwingConstants.VERTICAL));
-        buttonPane.add(Box.createHorizontalStrut(5));
-        buttonPane.add(button1);
-        buttonPane.add(button2);
-        buttonPane.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-        frame.add(BorderLayout.NORTH, newButton);
-        frame.add(BorderLayout.SOUTH, buttonPane);
-        frame.setVisible(true);//Makes window visable
-    }
-    
-    public void test_code(){
-        //Creating the Frame
-        JFrame frame = new JFrame("Chat Frame");
-        frame.setSize(400, 400);
-
-        //Creating the MenuBar and adding components
-        JMenuBar mb = new JMenuBar();
-        JMenu m1 = new JMenu("FILE");
-        JMenu m2 = new JMenu("Help");
-        mb.add(m1);
-        mb.add(m2);
-        JMenuItem m11 = new JMenuItem("Open");
-        JMenuItem m22 = new JMenuItem("Save as");
-        m1.add(m11);
-        m1.add(m22);
-
-        //Creating the panel at bottom and adding components
-        JPanel panel = new JPanel(); // the panel is not visible in output
-        JLabel label = new JLabel("Enter Text");
-        JTextField tf = new JTextField(10); // accepts upto 10 characters
-        JButton send = new JButton("Send");
-        JButton reset = new JButton("Reset");
-        panel.add(label); // Components Added using Flow Layout
-        panel.add(tf);
-        panel.add(send);
-        panel.add(reset);
-
-        // Text Area at the Center
-        JTextArea ta = new JTextArea();
-
-        //Adding Components to the frame.
-        frame.getContentPane().add(BorderLayout.SOUTH, panel);//Tells frame where to put what
-        frame.getContentPane().add(BorderLayout.NORTH, mb);
-        frame.getContentPane().add(BorderLayout.CENTER, ta);
-        frame.setVisible(true);
-    }
 
     public boolean hasText(String word){
         for(int i=0;i<word.length();i++){
@@ -100,51 +27,161 @@ public class App {
         return false;
     }
     public void OSGUI(){
+        DefaultListModel<String> BlockedItems = new DefaultListModel<String>();
+        JLabel Priority0=new JLabel("Priority 0 |");
+        JLabel Priority1=new JLabel("Priority 1 |");
+        JLabel Priority2=new JLabel("Priority 2 |");
+        JLabel Priority3=new JLabel("Priority 3 |");
+        JLabel Priority4=new JLabel("Priority 4 |");
         //Window Creation
         JFrame window = new JFrame("OSGUI");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setSize(1300,700);
         //Panel Creation
-        JPanel PQ = new JPanel();
+        JPanel PQ = new JPanel(new GridBagLayout());
+
         JPanel CurrentProcess = new JPanel();
         JPanel NewProcess = new JPanel();
-        JPanel BlockedList = new JPanel();
+        JPanel BlockedList = new JPanel(new GridBagLayout());
+        JPanel PQDisplay = new JPanel(new GridBagLayout());
+        PQ.setBackground(Color.white);
+        CurrentProcess.setBackground(Color.gray);
+        BlockedList.setBackground(Color.lightGray);
+        NewProcess.setBackground(Color.gray);
+        PQDisplay.setBackground(Color.lightGray);
+        PQDisplay.setSize(new Dimension(200, 200));
         //Panel Formating
-        JButton test1 = new JButton("PQ");
         //Panel Current Process
         JLabel Process = new JLabel("Current Process: ");
         JButton Block = new JButton("Block");
+        Block.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                BlockedItems.addElement(LoadedOS.getCurrentProgram());
+                LoadedOS.BlockCurrentProgram();
+                CurProcess.setText(LoadedOS.getCurrentProgram());
+                Priority0.setText(LoadedOS.priortyQueueString(0));
+                Priority1.setText(LoadedOS.priortyQueueString(1));
+                Priority2.setText(LoadedOS.priortyQueueString(2));
+                Priority3.setText(LoadedOS.priortyQueueString(3));
+                Priority4.setText(LoadedOS.priortyQueueString(4));
+            }
+        });
         JButton Finish = new JButton("Complete");
+        Finish.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                LoadedOS.FinishProgram();
+                CurProcess.setText(LoadedOS.getCurrentProgram());
+                Priority0.setText(LoadedOS.priortyQueueString(0));
+                Priority1.setText(LoadedOS.priortyQueueString(1));
+                Priority2.setText(LoadedOS.priortyQueueString(2));
+                Priority3.setText(LoadedOS.priortyQueueString(3));
+                Priority4.setText(LoadedOS.priortyQueueString(4));
+            }
+        });
         CurrentProcess.add(Process);
         CurrentProcess.add(CurProcess);
         CurrentProcess.add(Block);
         CurrentProcess.add(Finish);
         //Panel Blocked List
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets=new Insets(2, 2, 2, 2);
+
         JLabel BlockedLabel = new JLabel("Blocked List");
-        BlockedList.add(BlockedLabel);
-        BlockedList.add(new JSeparator(JSeparator.HORIZONTAL));
+        JButton UnblockButton = new JButton("Unblock");
+        JList<String> listBlocked = new JList<String>(BlockedItems);
+        UnblockButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                int index = listBlocked.getSelectedIndex();
+                BlockedItems.remove(index);
+                LoadedOS.Unblock(index);
+                Priority0.setText(LoadedOS.priortyQueueString(0));
+                Priority1.setText(LoadedOS.priortyQueueString(1));
+                Priority2.setText(LoadedOS.priortyQueueString(2));
+                Priority3.setText(LoadedOS.priortyQueueString(3));
+                Priority4.setText(LoadedOS.priortyQueueString(4));
+            }
+        });
+        listBlocked.setBounds(10, 20, 100, 300);
+        gbc.gridx=0;
+        gbc.gridy=0;
+        gbc.gridwidth=1;
+        gbc.gridheight=1;
+        gbc.ipadx=5;
+        gbc.ipady=5;
+        BlockedList.add(BlockedLabel,gbc);
+        gbc.gridx=1;
+        gbc.gridy=0;
+
+        BlockedList.add(UnblockButton,gbc);
+        gbc.gridx=0;
+        gbc.gridy=1;
+        BlockedList.add(listBlocked, gbc);
         //Panel Priority Queue
+        gbc.gridx=5;
+        gbc.gridy=0;
+        gbc.gridwidth=1;
+        gbc.gridheight=1;
+        gbc.ipadx=5;
+        gbc.ipady=5;
         JLabel pQLabel = new JLabel("Priorty Queue");
-        PQ.add(pQLabel);
+        PQ.add(pQLabel, gbc);
+        gbc.gridx=0;
+        gbc.gridy=1;
+        gbc.gridwidth=11;
+        gbc.gridheight=200;
+        PQ.add(PQDisplay, gbc);
+        gbc.gridx=0;
+        gbc.gridy=0;
+        gbc.gridwidth=100;
+        gbc.gridheight=1;
+        PQDisplay.add(Priority0, gbc);
+        gbc.gridy=1;
+        PQDisplay.add(Priority1, gbc);
+        gbc.gridy=2;
+        PQDisplay.add(Priority2, gbc);
+        gbc.gridy=3;
+        PQDisplay.add(Priority3, gbc);
+        gbc.gridy=4;
+        PQDisplay.add(Priority4, gbc);
         //Panel NewProcess
-        JLabel NewP = new JLabel("Process Name");
-        JLabel Newtest = new JLabel("Nothing");
+        JLabel NewP = new JLabel("Process Name: ");
         JTextField ProcessField = new JTextField(30);
+        JLabel priorityJLabel = new JLabel("Process Priority: ");
+        JTextField priorityField = new JTextField(5);
         JButton AddProcess = new JButton("Add Process");
         AddProcess.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
                 String NewProcessName = ProcessField.getText();//Grabs what is in the field
+                int priority = Integer.valueOf(priorityField.getText());
+                if(priority<0)
+                    priority=0;
+                else if(priority>=5)
+                    priority=4;
+                else if(!(priority>0&&priority<=5))
+                    priority=0;
                 ProcessField.setText("");
+                priorityField.setText("");
                 if(NewProcessName.length()>0&&hasText(NewProcessName)){
-                    Newtest.setText(NewProcessName);
+                    LoadedOS.AddProgram(NewProcessName, priority);
                 }
+                Priority0.setText(LoadedOS.priortyQueueString(0));
+                Priority1.setText(LoadedOS.priortyQueueString(1));
+                Priority2.setText(LoadedOS.priortyQueueString(2));
+                Priority3.setText(LoadedOS.priortyQueueString(3));
+                Priority4.setText(LoadedOS.priortyQueueString(4));
+                CurProcess.setText(LoadedOS.getCurrentProgram());
             }
         });
         NewProcess.add(NewP);
         NewProcess.add(ProcessField);
+        NewProcess.add(priorityJLabel);
+        NewProcess.add(priorityField);
         NewProcess.add(AddProcess);
-        NewProcess.add(Newtest);
         //Window formating
         window.add(BorderLayout.NORTH, CurrentProcess);
         window.add(BorderLayout.SOUTH, NewProcess);
