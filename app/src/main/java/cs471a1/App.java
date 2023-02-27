@@ -57,14 +57,17 @@ public class App {
         Block.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                BlockedItems.addElement(LoadedOS.getCurrentProgram());
-                LoadedOS.BlockCurrentProgram();
-                CurProcess.setText(LoadedOS.getCurrentProgram());
-                Priority0.setText(LoadedOS.priortyQueueString(0));
-                Priority1.setText(LoadedOS.priortyQueueString(1));
-                Priority2.setText(LoadedOS.priortyQueueString(2));
-                Priority3.setText(LoadedOS.priortyQueueString(3));
-                Priority4.setText(LoadedOS.priortyQueueString(4));
+                if(LoadedOS.getCurrentProgram()!=null&&hasText(LoadedOS.getCurrentProgram()))
+                {
+                    BlockedItems.addElement(LoadedOS.getCurrentProgram());
+                    LoadedOS.BlockCurrentProgram();
+                    CurProcess.setText(LoadedOS.getCurrentProgram());
+                    Priority0.setText(LoadedOS.priortyQueueString(0));
+                    Priority1.setText(LoadedOS.priortyQueueString(1));
+                    Priority2.setText(LoadedOS.priortyQueueString(2));
+                    Priority3.setText(LoadedOS.priortyQueueString(3));
+                    Priority4.setText(LoadedOS.priortyQueueString(4));
+                }
             }
         });
         JButton Finish = new JButton("Complete");
@@ -103,6 +106,7 @@ public class App {
                 Priority2.setText(LoadedOS.priortyQueueString(2));
                 Priority3.setText(LoadedOS.priortyQueueString(3));
                 Priority4.setText(LoadedOS.priortyQueueString(4));
+                CurProcess.setText(LoadedOS.getCurrentProgram());
             }
         });
         listBlocked.setBounds(10, 20, 100, 300);

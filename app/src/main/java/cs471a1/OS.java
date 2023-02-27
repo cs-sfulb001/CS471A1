@@ -50,6 +50,8 @@ public class OS {
         int priority = program.GetProgPriority();
         BlockedList.remove(index);
         ReadyProgs.elementAt(priority).add(program);
+        if(current_program==null)
+            current_program=nextProgram();
     }
     public String BlocklistString(){
         String temp="";
