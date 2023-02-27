@@ -25,7 +25,7 @@ public class OS {
         current_program=nextProgram();
     }
     public Prog nextProgram(){
-        for(int i=ReadyProgs.size()-1;i>0;i--){
+        for(int i=ReadyProgs.size()-1;i>=0;i--){
             if(ReadyProgs.elementAt(i).size()>0){
                 Prog temp = ReadyProgs.elementAt(i).elementAt(0);
                 ReadyProgs.elementAt(i).remove(0);
